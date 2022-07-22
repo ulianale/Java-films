@@ -2,8 +2,13 @@ package ru.netology.films;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.mockito.Mockito.*;
 
 public class MovieManagerTest {
+
+    MovieRepository repo = Mockito.mock(MovieRepository.class);
 
     Movie movie1 = new Movie(1, "Бладшот");
     Movie movie2 = new Movie(2, "Вперед");
@@ -20,69 +25,78 @@ public class MovieManagerTest {
 
     @Test
     public void shouldFindAll() {
-        MovieManager mov = new MovieManager();
-
-        mov.addMovie(movie6);
-        mov.addMovie(movie2);
-        mov.addMovie(movie1);
+        MovieManager manager = new MovieManager(repo);
+        Movie[] movies = {movie6, movie2, movie1};
+        doReturn(movies).when(repo).findAll();
 
         Movie[] expected = {movie6, movie2, movie1};
-        Movie[] actual = mov.findAll();
+        Movie[] actual = manager.findAll();
 
         Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldFindLast1() { // проверка лимита по умолчанию, когда фильмов в списке больше или равно лимиту
-        MovieManager mov = new MovieManager();
 
-        mov.addMovie(movie1);
-        mov.addMovie(movie2);
-        mov.addMovie(movie3);
-        mov.addMovie(movie4);
-        mov.addMovie(movie5);
-        mov.addMovie(movie6);
-        mov.addMovie(movie7);
-        mov.addMovie(movie8);
-        mov.addMovie(movie9);
-        mov.addMovie(movie10);
-        mov.addMovie(movie11);
+        MovieManager manager = new MovieManager(repo);
+        Movie[] movies = {movie1, movie2, movie3, movie4, movie5, movie6, movie7, movie8, movie9, movie10, movie11};
+        doReturn(movies).when(repo).findAll();
 
         Movie[] expected = {movie11, movie10, movie9, movie8, movie7, movie6, movie5, movie4, movie3, movie2};
-        Movie[] actual = mov.findLast();
+        Movie[] actual = manager.findLast();
 
         Assertions.assertArrayEquals(expected, actual);
     }
 
+    /**
     @Test
-    public void shouldFindLast2() { // проверка лимита по умолчанию, когда добавленных фильмов  меньше чем лимит
-        MovieManager mov = new MovieManager();
+    public void shouldFindLast2() { // проверка лимита по умолчанию, когда добавленных фильмов  меньше чем лимит//
 
-        mov.addMovie(movie1);
-        mov.addMovie(movie2);
-        mov.addMovie(movie3);
-        mov.addMovie(movie4);
-        mov.addMovie(movie5);
+        MovieManager manager = new MovieManager(repo);
+        manager.addMovie(movie1);
+        manager.addMovie(movie2);
+        manager.addMovie(movie3);
+        manager.addMovie(movie4);
+        manager.addMovie(movie5);
 
         Movie[] expected = {movie5, movie4, movie3, movie2, movie1};
-        Movie[] actual = mov.findLast();
+        Movie[] actual = manager.findLast();
 
         Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
     public void shouldFindLastNewLimit1() {
-        MovieManager mov = new MovieManager(2);
 
-        mov.addMovie(movie1);
-        mov.addMovie(movie2);
-        mov.addMovie(movie3);
-        mov.addMovie(movie4);
-        mov.addMovie(movie5);
+        MovieManager manager = new MovieManager(repo, 2);
+        manager.addMovie(movie1);
+        manager.addMovie(movie2);
+        manager.addMovie(movie3);
+        manager.addMovie(movie4);
+        manager.addMovie(movie5);
 
         Movie[] expected = {movie5, movie4};
-        Movie[] actual = mov.findLast();
+        Movie[] actual = manager.findLast();
 
         Assertions.assertArrayEquals(expected, actual);
     }
+
+     **/
+
+    @Test
+    public void shouldFindLastNewLimit2() {
+
+        MovieManager manager = new MovieManager(repo, -1);
+        Movie[] movies = {movie1};
+        doReturn(movies).when(repo).findAll();
+
+        //manager.addMovie(movie1);
+
+        Movie[] expected = {movie1};
+        Movie[] actual = manager.findLast();
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
 }
+
