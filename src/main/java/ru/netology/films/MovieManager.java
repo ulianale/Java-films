@@ -28,11 +28,15 @@ public class MovieManager {
 
     public Movie[] findLast() {
 
+        int newLimit;
+
         if (movies.length < limit) { // это условие исключает ошибку, если количество добавленных фильмов меньше лимита
-            limit = movies.length;
+            newLimit = movies.length;
+        } else {
+            newLimit = limit;
         }
-        Movie[] reversed = new Movie[limit];
-        for (int i = 0; i < limit; i++) {
+        Movie[] reversed = new Movie[newLimit];
+        for (int i = 0; i < newLimit; i++) {
             reversed[i] = movies[movies.length - 1 - i];
         }
         return reversed;
