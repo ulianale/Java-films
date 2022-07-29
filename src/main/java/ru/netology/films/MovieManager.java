@@ -27,12 +27,15 @@
 
     public Movie[] findLast() {
         Movie[] all = repo.findAll();
+        int newLimit;
 
         if (all.length < limit) { // это условие исключает ошибку, если количество добавленных фильмов меньше лимита
-            limit = all.length;
+            newLimit = all.length;
+        } else {
+            newLimit = limit;
         }
-        Movie[] reversed = new Movie[limit];
-        for (int i = 0; i < limit; i++) {
+        Movie[] reversed = new Movie[newLimit];
+        for (int i = 0; i < newLimit; i++) {
             reversed[i] = all[all.length - 1 - i];
         }
         return reversed;
